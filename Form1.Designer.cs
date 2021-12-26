@@ -174,6 +174,7 @@ namespace WF_Autok_Adatbazis
             this.Name = "Form_Autok_Nyito";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Autók";
+            this.Load += new System.EventHandler(this.Form_Autok_Nyito_Load);
             this.groupBox_Autok.ResumeLayout(false);
             this.groupBox_Autok.PerformLayout();
             this.ResumeLayout(false);

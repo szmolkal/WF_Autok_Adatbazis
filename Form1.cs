@@ -16,5 +16,10 @@ namespace WF_Autok_Adatbazis
         {
             InitializeComponent();
         }
+
+        private void Form_Autok_Nyito_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
