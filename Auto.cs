@@ -25,5 +25,10 @@ namespace WF_Autok_Adatbazis
         public string Rendszam { get => rendszam; set => rendszam = value; }
         public string Gyartmany { get => gyartmany; set => gyartmany = value; }
         public string Tipus { get => tipus; set => tipus = value; }
+
+        public override string ToString()
+        {
+            return rendszam + " " + gyartmany + " " + tipus;
+        }
     }
 }
