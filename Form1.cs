@@ -7,19 +7,53 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace WF_Autok_Adatbazis
 {
     public partial class Form_Autok_Nyito : Form
     {
+        MySqlConnection connection = null;
+        MySqlCommand sqlCommand = null;
+
         public Form_Autok_Nyito()
         {
             InitializeComponent();
         }
-
+         
         private void Form_Autok_Nyito_Load(object sender, EventArgs e)
         {
+            MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder();
+            sb.Server = "localhost";
+            sb.UserID = "root";
+            sb.Password = "";
+            sb.Database = "autok";
+            sb.CharacterSet = "utf8";
+            connection = new MySqlConnection(sb.ToString());
+            sqlCommand = connection.CreateCommand();
+            
+            AutokAdatainakBetolteseAdatbazisbol();
+            
+        }
 
+        private void AutokAdatainakBetolteseAdatbazisbol()
+        {
+            try
+            {
+                connection.Open();
+                sqlCommand.CommandText = "SELECT * FROM `autok`;";
+                using (MySqlDataReader dr = sqlCommand.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
