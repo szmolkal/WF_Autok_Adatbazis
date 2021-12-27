@@ -32,7 +32,8 @@ namespace WF_Autok_Adatbazis
             sb.UserID = "root";
             sb.Password = "";
             sb.Database = "autok";
-            sb.CharacterSet = "utf8"; 
+            sb.CharacterSet = "utf8";
+            sb.SslMode = 0;
             mysqlConnection = new MySqlConnection(sb.ToString());
             //sqlCommand = connection.CreateCommand();
             mysqlCommand = new MySqlCommand(sb.Server, mysqlConnection);
@@ -42,15 +43,17 @@ namespace WF_Autok_Adatbazis
 
         private void AutokAdatainakBetolteseAdatbazisbol()
         {
+            listBox_Autok.Items.Clear();
             try
             {
                 mysqlConnection.Open();
-                mysqlCommand.CommandText = "SELECT * FROM `autok`;";
+                mysqlCommand.CommandText = "SELECT `id`, `rendszam`, `gyartmany`, `tipus` FROM `autok` WHERE 1;";
                 using (MySqlDataReader dr = mysqlCommand.ExecuteReader())
                 {
                     while (dr.Read())
                     {
-                        
+                        Auto auto = new Auto(dr.GetInt32("id"), dr.GetString("rendszam"), dr.GetString("gyartmany"), dr.GetString("tipus"));
+                        listBox_Autok.Items.Add(auto);
                     }
                 }
             }
