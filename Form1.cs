@@ -27,40 +27,80 @@ namespace WF_Autok_Adatbazis
         private void Form_Autok_Nyito_Load(object sender, EventArgs e)
         {
             //-- MySqlConnectionStringBuilder Provides a base class for strongly typed connection string builders over MySQL connections.
-            MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder();
-            sb.Server = "localhost";
-            sb.UserID = "root";
-            sb.Password = "";
-            sb.Database = "autok";
-            sb.CharacterSet = "utf8";
-            sb.SslMode = 0;
-            mysqlConnection = new MySqlConnection(sb.ToString());
-            //sqlCommand = connection.CreateCommand();
-            mysqlCommand = new MySqlCommand(sb.Server, mysqlConnection);
+            //MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder();
+            //sb.Server = "localhost";
+            //sb.UserID = "root";
+            //sb.Password = "";
+            //sb.Database = "autok";
+            //sb.CharacterSet = "utf8";
+            //sb.SslMode = 0;
+            //mysqlConnection = new MySqlConnection(sb.ToString());
+            ////sqlCommand = connection.CreateCommand();
+            //mysqlCommand = new MySqlCommand(sb.Server, mysqlConnection);
             AutokAdatainakBetolteseAdatbazisbol();
-            
+
         }
 
+        #region //-- Módszer1
+        //private void AutokAdatainakBetolteseAdatbazisbol()
+        //{
+        //    listBox_Autok.Items.Clear();
+        //    try
+        //    {
+        //        mysqlConnection.Open();
+        //        mysqlCommand.CommandText = "SELECT `id`, `rendszam`, `gyartmany`, `tipus` FROM `autok` WHERE 1;";
+        //        using (MySqlDataReader dr = mysqlCommand.ExecuteReader())
+        //        {
+        //            while (dr.Read())
+        //            {
+        //                Auto auto = new Auto(dr.GetInt32("id"), dr.GetString("rendszam"), dr.GetString("gyartmany"), dr.GetString("tipus"));
+        //                listBox_Autok.Items.Add(auto);
+        //            }
+        //        }
+        //    }
+        //    catch (MySqlException ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //}
+        #endregion
+
+        #region //-- Módszer2
         private void AutokAdatainakBetolteseAdatbazisbol()
         {
-            listBox_Autok.Items.Clear();
+            MySqlConnection mysqlConnection;
+            MySqlConnectionStringBuilder stringBuilder = new MySqlConnectionStringBuilder();
+            stringBuilder.Server = "localhost";
+            stringBuilder.UserID = "root";
+            stringBuilder.Password = "";
+            stringBuilder.CharacterSet = "utf8";
+            stringBuilder.SslMode = 0;
+            stringBuilder.Database = "autok";
+            mysqlConnection = new MySqlConnection(stringBuilder.ToString());
             try
             {
                 mysqlConnection.Open();
-                mysqlCommand.CommandText = "SELECT `id`, `rendszam`, `gyartmany`, `tipus` FROM `autok` WHERE 1;";
-                using (MySqlDataReader dr = mysqlCommand.ExecuteReader())
-                {
-                    while (dr.Read())
-                    {
-                        Auto auto = new Auto(dr.GetInt32("id"), dr.GetString("rendszam"), dr.GetString("gyartmany"), dr.GetString("tipus"));
-                        listBox_Autok.Items.Add(auto);
-                    }
-                }
             }
             catch (MySqlException ex)
             {
                 MessageBox.Show(ex.Message);
+                //this.DialogResult = DialogResult.Cancel;
+                return;
             }
-        }
+            
+            string SQLString = "SELECT * FROM autok";
+            MySqlCommand mysqlCommand=null;
+            mysqlCommand.CommandText = "SELECT * FROM autok";
+            mysqlCommand = new MySqlCommand();
+            //mysqlCommand = new MySqlCommand(SQLString, mysqlConnection);
+            using (MySqlDataReader dataReader = mysqlCommand.ExecuteReader())
+            {
+
+            } 
+            mysqlConnection.Close();
+
+
+       }
+        #endregion
     }
 }
