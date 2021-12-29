@@ -80,7 +80,26 @@ namespace WF_Autok_Adatbazis
             try
             {
                 mysqlConnection.Open();
-            }
+                string SQLString = "SELECT * FROM autok WHERE 1";
+                MySqlCommand mysqlCommand = mysqlConnection.CreateCommand();
+                mysqlCommand.CommandText = SQLString;
+                //mysqlCommand = new MySqlCommand(SQLString, mysqlConnection);
+                try
+                {
+                    using (MySqlDataReader dataReader = mysqlCommand.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            Auto auto = new Auto(dataReader.GetInt32("id"), dataReader.GetString("rendszam"), dataReader.GetString("gyartmany"), dataReader.GetString("tipus"));
+
+                            listBox_Autok.Items.Add(auto);
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }            }
             catch (MySqlException ex)
             {
                 MessageBox.Show(ex.Message);
@@ -88,19 +107,12 @@ namespace WF_Autok_Adatbazis
                 return;
             }
             
-            string SQLString = "SELECT * FROM autok";
-            MySqlCommand mysqlCommand=null;
-            mysqlCommand.CommandText = "SELECT * FROM autok";
-            mysqlCommand = new MySqlCommand();
-            //mysqlCommand = new MySqlCommand(SQLString, mysqlConnection);
-            using (MySqlDataReader dataReader = mysqlCommand.ExecuteReader())
-            {
 
-            } 
             mysqlConnection.Close();
-
-
        }
+        #endregion
+
+        #region
         #endregion
     }
 }
