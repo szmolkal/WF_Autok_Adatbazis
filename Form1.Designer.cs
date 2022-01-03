@@ -42,6 +42,7 @@ namespace WF_Autok_Adatbazis
             this.button_Update = new System.Windows.Forms.Button();
             this.groupBox_Autok = new System.Windows.Forms.GroupBox();
             this.listBox_Autok = new System.Windows.Forms.ListBox();
+            this.button_Close = new System.Windows.Forms.Button();
             this.groupBox_Autok.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -113,16 +114,18 @@ namespace WF_Autok_Adatbazis
             // 
             this.button_Insert.Location = new System.Drawing.Point(16, 157);
             this.button_Insert.Name = "button_Insert";
-            this.button_Insert.Size = new System.Drawing.Size(215, 23);
+            this.button_Insert.Size = new System.Drawing.Size(142, 23);
             this.button_Insert.TabIndex = 5;
             this.button_Insert.Text = "Rögzít";
             this.button_Insert.UseVisualStyleBackColor = true;
+            this.button_Insert.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_Insert_MouseMove);
             // 
             // button_Delete
             // 
+            this.button_Delete.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button_Delete.Location = new System.Drawing.Point(16, 199);
             this.button_Delete.Name = "button_Delete";
-            this.button_Delete.Size = new System.Drawing.Size(215, 23);
+            this.button_Delete.Size = new System.Drawing.Size(142, 23);
             this.button_Delete.TabIndex = 6;
             this.button_Delete.Text = "Töröl";
             this.button_Delete.UseVisualStyleBackColor = true;
@@ -131,13 +134,14 @@ namespace WF_Autok_Adatbazis
             // 
             this.button_Update.Location = new System.Drawing.Point(16, 241);
             this.button_Update.Name = "button_Update";
-            this.button_Update.Size = new System.Drawing.Size(215, 23);
+            this.button_Update.Size = new System.Drawing.Size(142, 23);
             this.button_Update.TabIndex = 7;
             this.button_Update.Text = "Módosít";
             this.button_Update.UseVisualStyleBackColor = true;
             // 
             // groupBox_Autok
             // 
+            this.groupBox_Autok.Controls.Add(this.button_Close);
             this.groupBox_Autok.Controls.Add(this.button_Update);
             this.groupBox_Autok.Controls.Add(this.label1);
             this.groupBox_Autok.Controls.Add(this.button_Delete);
@@ -164,10 +168,22 @@ namespace WF_Autok_Adatbazis
             this.listBox_Autok.Size = new System.Drawing.Size(193, 277);
             this.listBox_Autok.TabIndex = 4;
             // 
+            // button_Close
+            // 
+            this.button_Close.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.button_Close.Location = new System.Drawing.Point(170, 157);
+            this.button_Close.Name = "button_Close";
+            this.button_Close.Size = new System.Drawing.Size(61, 107);
+            this.button_Close.TabIndex = 8;
+            this.button_Close.Text = "Mentés és bezárás";
+            this.button_Close.UseVisualStyleBackColor = true;
+            this.button_Close.Click += new System.EventHandler(this.button_Close_Click);
+            // 
             // Form_Autok_Nyito
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.button_Close;
             this.ClientSize = new System.Drawing.Size(471, 314);
             this.Controls.Add(this.listBox_Autok);
             this.Controls.Add(this.groupBox_Autok);
@@ -196,6 +212,7 @@ namespace WF_Autok_Adatbazis
         private System.Windows.Forms.Button button_Update;
         private System.Windows.Forms.GroupBox groupBox_Autok;
         private System.Windows.Forms.ListBox listBox_Autok;
+        private System.Windows.Forms.Button button_Close;
     }
 }
 

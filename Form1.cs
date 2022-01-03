@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,7 @@ namespace WF_Autok_Adatbazis
 
         }
 
+
         #region //-- Módszer1
         //private void AutokAdatainakBetolteseAdatbazisbol()
         //{
@@ -66,53 +68,200 @@ namespace WF_Autok_Adatbazis
         #endregion
 
         #region //-- Módszer2
+        // private void AutokAdatainakBetolteseAdatbazisbol()
+        // {
+        //     MySqlConnection mysqlConnection;
+        //     MySqlConnectionStringBuilder stringBuilder = new MySqlConnectionStringBuilder();
+        //     stringBuilder.Server = "localhost";
+        //     stringBuilder.UserID = "root";
+        //     stringBuilder.Password = "";
+        //     stringBuilder.CharacterSet = "utf8";
+        //     stringBuilder.SslMode = 0;
+        //     stringBuilder.Database = "autok";
+        //     mysqlConnection = new MySqlConnection(stringBuilder.ToString());
+        //     try
+        //     {
+        //         mysqlConnection.Open();
+        //         string SQLString = "SELECT * FROM autok WHERE 1";
+        //         MySqlCommand mysqlCommand = mysqlConnection.CreateCommand();
+        //         mysqlCommand.CommandText = SQLString;
+        //         //mysqlCommand = new MySqlCommand(SQLString, mysqlConnection);
+        //         try
+        //         {
+        //             using (MySqlDataReader dataReader = mysqlCommand.ExecuteReader())
+        //             {
+        //                 while (dataReader.Read())
+        //                 {
+        //                     Auto auto = new Auto(dataReader.GetInt32("id"), dataReader.GetString("rendszam"), dataReader.GetString("gyartmany"), dataReader.GetString("tipus"));
+
+        //                     listBox_Autok.Items.Add(auto);
+        //                 }
+        //             }
+        //         }
+        //         catch (MySqlException ex)
+        //         {
+        //             MessageBox.Show(ex.Message);
+        //         }            }
+        //     catch (MySqlException ex)
+        //     {
+        //         MessageBox.Show(ex.Message);
+        //         //this.DialogResult = DialogResult.Cancel;
+        //         return;
+        //     }
+
+
+        //     mysqlConnection.Close();
+        //}
+        #endregion
+
+        #region //-- Módszer2 újra1
+        //private void AutokAdatainakBetolteseAdatbazisbol()
+        //{
+        //    //-- Connection objektum
+        //    MySqlConnectionStringBuilder mySqlConnectionStringBuilder = new MySqlConnectionStringBuilder();
+        //    mySqlConnectionStringBuilder.Server = "localhost";
+        //    mySqlConnectionStringBuilder.UserID = "root";
+        //    mySqlConnectionStringBuilder.Password = "";
+        //    mySqlConnectionStringBuilder.SslMode = 0;
+        //    mySqlConnectionStringBuilder.Database = "autok";
+        //    mySqlConnectionStringBuilder.CharacterSet = "utf8";
+        //    mysqlConnection = new MySqlConnection(mySqlConnectionStringBuilder.ToString());
+
+        //    try
+        //    {
+        //        mysqlConnection.Open();
+        //        try
+        //        {
+        //            //-- Command objektum
+        //            mysqlCommand = mysqlConnection.CreateCommand();
+        //            mysqlCommand.CommandText = "SELECT * FROM autok;";
+
+        //            try
+        //            {
+        //                //-- DataReader objektum
+        //                MySqlDataReader mySqlDataReader = mysqlCommand.ExecuteReader();
+        //                while (mySqlDataReader.Read())
+        //                {
+        //                    Auto auto = new Auto(mySqlDataReader.GetInt32("id"), mySqlDataReader.GetString("rendszam"), mySqlDataReader.GetString("gyartmany"), mySqlDataReader.GetString("tipus"));
+        //                    this.listBox_Autok.Items.Add(auto);
+        //                }
+        //            }
+        //            catch (MySqlException ex)
+        //            {
+
+        //                MessageBox.Show(ex.Message);
+        //            }
+        //        }
+        //        catch (MySqlException ex)
+        //        {
+
+        //            MessageBox.Show(ex.Message);
+        //        }
+
+        //    }
+        //    catch (MySqlException ex)
+        //    {
+
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //}
+        #endregion //-- Módszer2 újra1
+
+        #region //-- Módszer2 újra2
         private void AutokAdatainakBetolteseAdatbazisbol()
         {
-            MySqlConnection mysqlConnection;
-            MySqlConnectionStringBuilder stringBuilder = new MySqlConnectionStringBuilder();
-            stringBuilder.Server = "localhost";
-            stringBuilder.UserID = "root";
-            stringBuilder.Password = "";
-            stringBuilder.CharacterSet = "utf8";
-            stringBuilder.SslMode = 0;
-            stringBuilder.Database = "autok";
-            mysqlConnection = new MySqlConnection(stringBuilder.ToString());
+            //-- Connection objektum
             try
             {
+                MySqlConnectionStringBuilder mySqlConnectionStringBuilder = new MySqlConnectionStringBuilder();
+                mySqlConnectionStringBuilder.Database = "autok";
+                mySqlConnectionStringBuilder.UserID = "root";
+                mySqlConnectionStringBuilder.Server = "localhost";
+                mySqlConnectionStringBuilder.Password = "";
+                mySqlConnectionStringBuilder.SslMode = 0;
+                mySqlConnectionStringBuilder.CharacterSet = "utf8";
+
+                mysqlConnection = new MySqlConnection(mySqlConnectionStringBuilder.ToString());
                 mysqlConnection.Open();
-                string SQLString = "SELECT * FROM autok WHERE 1";
-                MySqlCommand mysqlCommand = mysqlConnection.CreateCommand();
-                mysqlCommand.CommandText = SQLString;
-                //mysqlCommand = new MySqlCommand(SQLString, mysqlConnection);
+
+                //-- Command objektum:
                 try
                 {
-                    using (MySqlDataReader dataReader = mysqlCommand.ExecuteReader())
-                    {
-                        while (dataReader.Read())
-                        {
-                            Auto auto = new Auto(dataReader.GetInt32("id"), dataReader.GetString("rendszam"), dataReader.GetString("gyartmany"), dataReader.GetString("tipus"));
+                    mysqlCommand = new MySqlCommand("SELECT * FROM autok;", mysqlConnection);                    
 
-                            listBox_Autok.Items.Add(auto);
+                    //-- DataReader objektum:
+                    try
+                    {
+                        MySqlDataReader mySqlDataReader = mysqlCommand.ExecuteReader();
+                        while (mySqlDataReader.Read())
+                        {
+                            Auto auto = new Auto(mySqlDataReader.GetInt32("id"), mySqlDataReader.GetString("rendszam"), mySqlDataReader.GetString("gyartmany"), mySqlDataReader.GetString("tipus"));
+                            this.listBox_Autok.Items.Add(auto);
                         }
+                    }
+                    catch (MySqlException ex)
+                    {
+
+                        MessageBox.Show(ex.Message);
                     }
                 }
                 catch (MySqlException ex)
                 {
+
                     MessageBox.Show(ex.Message);
-                }            }
+                }
+            }
             catch (MySqlException ex)
             {
+
                 MessageBox.Show(ex.Message);
-                //this.DialogResult = DialogResult.Cancel;
-                return;
             }
-            
-
             mysqlConnection.Close();
-       }
-        #endregion
+        }
+        #endregion //-- Módszer2 újra2
 
-        #region
-        #endregion
+        private void button_Close_Click(object sender, EventArgs e)
+        {
+            
+            string sqlInserIntoString = "INSERT INTO `autok`(`rendszam`, `gyartmany`, `tipus`) VALUES ('[@rendszam]','[@gyartmany]','[@tipus]');";
+            mysqlCommand.CommandText = sqlInserIntoString;
+
+            foreach (Auto auto in listBox_Autok.Items)
+            {
+                if (auto.Id==0)
+                {
+                    mysqlCommand.Parameters.AddWithValue("@rendszam",(string) auto.Rendszam);
+                    mysqlCommand.Parameters.AddWithValue("@gyartmany",(string) auto.Gyartmany);
+                    mysqlCommand.Parameters.AddWithValue("@tipus",(string) auto.Tipus);
+                    mysqlCommand.ExecuteNonQuery();
+                }
+            }
+
+            try
+            {
+                mysqlConnection.Open();
+                mysqlCommand.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+            mysqlConnection.Close();
+            this.Close();
+        }
+
+        private void button_Insert_MouseMove(object sender, MouseEventArgs e)
+        {
+            ToolTip toolTip = new ToolTip();
+            toolTip.ToolTipTitle = "Adatok rögzítése a listában.";
+            toolTip.AutoPopDelay = 15000;
+            toolTip.InitialDelay = 500;
+            toolTip.ReshowDelay = 500;
+            toolTip.IsBalloon = true;
+            toolTip.ShowAlways = true;
+            toolTip.SetToolTip(button_Insert,"Kattints a rögzítéshez!");
+            toolTip = null;
+        }
     }
 }
