@@ -41,8 +41,9 @@ namespace WF_Autok_Adatbazis
             this.button_Delete = new System.Windows.Forms.Button();
             this.button_Update = new System.Windows.Forms.Button();
             this.groupBox_Autok = new System.Windows.Forms.GroupBox();
-            this.listBox_Autok = new System.Windows.Forms.ListBox();
             this.button_Close = new System.Windows.Forms.Button();
+            this.listBox_Autok = new System.Windows.Forms.ListBox();
+            this.button_Save = new System.Windows.Forms.Button();
             this.groupBox_Autok.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,7 +119,8 @@ namespace WF_Autok_Adatbazis
             this.button_Insert.TabIndex = 5;
             this.button_Insert.Text = "Rögzít";
             this.button_Insert.UseVisualStyleBackColor = true;
-            this.button_Insert.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_Insert_MouseMove);
+            this.button_Insert.Click += new System.EventHandler(this.button_Insert_Click);
+            this.button_Insert.MouseHover += new System.EventHandler(this.button_Insert_MouseHover);
             // 
             // button_Delete
             // 
@@ -129,6 +131,7 @@ namespace WF_Autok_Adatbazis
             this.button_Delete.TabIndex = 6;
             this.button_Delete.Text = "Töröl";
             this.button_Delete.UseVisualStyleBackColor = true;
+            this.button_Delete.Click += new System.EventHandler(this.button_Delete_Click);
             // 
             // button_Update
             // 
@@ -141,6 +144,7 @@ namespace WF_Autok_Adatbazis
             // 
             // groupBox_Autok
             // 
+            this.groupBox_Autok.Controls.Add(this.button_Save);
             this.groupBox_Autok.Controls.Add(this.button_Close);
             this.groupBox_Autok.Controls.Add(this.button_Update);
             this.groupBox_Autok.Controls.Add(this.label1);
@@ -155,18 +159,10 @@ namespace WF_Autok_Adatbazis
             this.groupBox_Autok.Controls.Add(this.textBox_Rendszam);
             this.groupBox_Autok.Location = new System.Drawing.Point(13, 15);
             this.groupBox_Autok.Name = "groupBox_Autok";
-            this.groupBox_Autok.Size = new System.Drawing.Size(247, 284);
+            this.groupBox_Autok.Size = new System.Drawing.Size(247, 325);
             this.groupBox_Autok.TabIndex = 3;
             this.groupBox_Autok.TabStop = false;
             this.groupBox_Autok.Text = "Autók adatai";
-            // 
-            // listBox_Autok
-            // 
-            this.listBox_Autok.FormattingEnabled = true;
-            this.listBox_Autok.Location = new System.Drawing.Point(266, 22);
-            this.listBox_Autok.Name = "listBox_Autok";
-            this.listBox_Autok.Size = new System.Drawing.Size(193, 277);
-            this.listBox_Autok.TabIndex = 4;
             // 
             // button_Close
             // 
@@ -179,12 +175,31 @@ namespace WF_Autok_Adatbazis
             this.button_Close.UseVisualStyleBackColor = true;
             this.button_Close.Click += new System.EventHandler(this.button_Close_Click);
             // 
+            // listBox_Autok
+            // 
+            this.listBox_Autok.FormattingEnabled = true;
+            this.listBox_Autok.Location = new System.Drawing.Point(266, 22);
+            this.listBox_Autok.Name = "listBox_Autok";
+            this.listBox_Autok.Size = new System.Drawing.Size(193, 316);
+            this.listBox_Autok.TabIndex = 4;
+            // 
+            // button_Save
+            // 
+            this.button_Save.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.button_Save.Location = new System.Drawing.Point(16, 283);
+            this.button_Save.Name = "button_Save";
+            this.button_Save.Size = new System.Drawing.Size(215, 23);
+            this.button_Save.TabIndex = 8;
+            this.button_Save.Text = "Mentés";
+            this.button_Save.UseVisualStyleBackColor = true;
+            this.button_Save.MouseHover += new System.EventHandler(this.button_Save_MouseHover);
+            // 
             // Form_Autok_Nyito
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_Close;
-            this.ClientSize = new System.Drawing.Size(471, 314);
+            this.ClientSize = new System.Drawing.Size(471, 352);
             this.Controls.Add(this.listBox_Autok);
             this.Controls.Add(this.groupBox_Autok);
             this.Name = "Form_Autok_Nyito";
@@ -213,6 +228,7 @@ namespace WF_Autok_Adatbazis
         private System.Windows.Forms.GroupBox groupBox_Autok;
         private System.Windows.Forms.ListBox listBox_Autok;
         private System.Windows.Forms.Button button_Close;
+        private System.Windows.Forms.Button button_Save;
     }
 }
 

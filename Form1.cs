@@ -223,35 +223,67 @@ namespace WF_Autok_Adatbazis
         private void button_Close_Click(object sender, EventArgs e)
         {
             
-            string sqlInserIntoString = "INSERT INTO `autok`(`rendszam`, `gyartmany`, `tipus`) VALUES ('[@rendszam]','[@gyartmany]','[@tipus]');";
+            string sqlInserIntoString = "INSERT INTO `autok`(`rendszam`, `gyartmany`, `tipus`) VALUES (@rendszam,@gyartmany,@tipus);";
             mysqlCommand.CommandText = sqlInserIntoString;
+            mysqlConnection.Open();
 
+            //int ujAutoInListbox = 0; //Ennek értékét mindig eggyel növeljük, ha új - még rögzítetlen elemet találunk a listboxban) Lásd a foreach ciklusban.
             foreach (Auto auto in listBox_Autok.Items)
             {
                 if (auto.Id==0)
                 {
-                    mysqlCommand.Parameters.AddWithValue("@rendszam",(string) auto.Rendszam);
-                    mysqlCommand.Parameters.AddWithValue("@gyartmany",(string) auto.Gyartmany);
-                    mysqlCommand.Parameters.AddWithValue("@tipus",(string) auto.Tipus);
+                    mysqlCommand.Parameters.AddWithValue("@rendszam",(string) textBox_Rendszam.Text);
+                    mysqlCommand.Parameters.AddWithValue("@gyartmany",(string) textBox_Gyartmany.Text);
+                    mysqlCommand.Parameters.AddWithValue("@tipus",(string) textBox_Tipus.Text);
                     mysqlCommand.ExecuteNonQuery();
                 }
             }
 
-            try
-            {
-                mysqlConnection.Open();
-                mysqlCommand.ExecuteNonQuery();
-            }
-            catch (MySqlException ex)
-            {
+            //try
+            //{
+            //    //mysqlConnection.Open();
+            //    mysqlCommand.ExecuteNonQuery();
+            //}
+            //catch (MySqlException ex)
+            //{
 
-                MessageBox.Show(ex.Message);
-            }
+            //    MessageBox.Show(ex.Message);
+            //}
             mysqlConnection.Close();
-            this.Close();
+            //this.Close();
         }
 
-        private void button_Insert_MouseMove(object sender, MouseEventArgs e)
+        //private void button_Insert_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    ToolTip toolTip = new ToolTip();
+        //    toolTip.ToolTipTitle = "Adatok rögzítése a listában.";
+        //    toolTip.AutoPopDelay = 15000;
+        //    toolTip.InitialDelay = 500;
+        //    toolTip.ReshowDelay = 500;
+        //    toolTip.IsBalloon = true;
+        //    toolTip.ShowAlways = true;
+        //    toolTip.SetToolTip(button_Insert,"Kattints a rögzítéshez!");
+        //    //toolTip = null;
+        //}
+
+        private void button_Delete_Click(object sender, EventArgs e)
+        {
+            listBox_Autok.Items.RemoveAt(listBox_Autok.SelectedIndex);
+        }
+
+        private void button_Save_MouseHover(object sender, EventArgs e)
+        {
+            ToolTip toolTip = new ToolTip();
+            toolTip.IsBalloon = true;
+            toolTip.InitialDelay = 500;
+            toolTip.AutoPopDelay = 15000;
+            toolTip.ToolTipTitle = "Mentés gomb";
+            toolTip.SetToolTip(button_Save, "Adatok mentése adatbázisba, az ablak bezárása nélkül.");
+            toolTip.ReshowDelay = 500;
+            toolTip.ShowAlways = true;
+        }
+
+        private void button_Insert_MouseHover(object sender, EventArgs e)
         {
             ToolTip toolTip = new ToolTip();
             toolTip.ToolTipTitle = "Adatok rögzítése a listában.";
@@ -260,8 +292,15 @@ namespace WF_Autok_Adatbazis
             toolTip.ReshowDelay = 500;
             toolTip.IsBalloon = true;
             toolTip.ShowAlways = true;
-            toolTip.SetToolTip(button_Insert,"Kattints a rögzítéshez!");
-            toolTip = null;
+            toolTip.SetToolTip(button_Insert,"Kattints a gombra a listában való rögzítéshez!\n(Ekkor az adatbázisban még nem kerül mentésre.)");
+            //toolTip = null;
+
+        }
+
+        private void button_Insert_Click(object sender, EventArgs e)
+        {
+            Auto auto = new Auto(0, textBox_Rendszam.Text, textBox_Gyartmany.Text, textBox_Tipus.Text);
+            listBox_Autok.Items.Add(auto);
         }
     }
 }

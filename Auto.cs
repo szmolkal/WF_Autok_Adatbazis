@@ -13,6 +13,10 @@ namespace WF_Autok_Adatbazis
         string gyartmany = null;
         string tipus = null;
 
+        public Auto()
+        {
+        }
+
         public Auto(int id, string rendszam, string gyartmany, string tipus)
         {
             this.id = id;
@@ -28,7 +32,7 @@ namespace WF_Autok_Adatbazis
 
         public override string ToString()
         {
-            return rendszam + " " + gyartmany + " " + tipus;
+            return id + " " + rendszam + " " + gyartmany + " " + tipus;
         }
     }
 }
