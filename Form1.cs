@@ -39,11 +39,16 @@ namespace WF_Autok_Adatbazis
             ////sqlCommand = connection.CreateCommand();
             //mysqlCommand = new MySqlCommand(sb.Server, mysqlConnection);
             AutokAdatainakBetolteseAdatbazisbol();
+        }
+
+        private void Form_Autok_Nyito_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            mysqlConnection.Close();
 
         }
 
 
-        #region //-- Módszer1
+        #region //-- Módszer1 -- private void AutokAdatainakBetolteseAdatbazisbol()
         //private void AutokAdatainakBetolteseAdatbazisbol()
         //{
         //    listBox_Autok.Items.Clear();
@@ -65,9 +70,9 @@ namespace WF_Autok_Adatbazis
         //        MessageBox.Show(ex.Message);
         //    }
         //}
-        #endregion
+        #endregion 
 
-        #region //-- Módszer2
+        #region //-- Módszer2 -- private void AutokAdatainakBetolteseAdatbazisbol()
         // private void AutokAdatainakBetolteseAdatbazisbol()
         // {
         //     MySqlConnection mysqlConnection;
@@ -114,7 +119,7 @@ namespace WF_Autok_Adatbazis
         //}
         #endregion
 
-        #region //-- Módszer2 újra1
+        #region //-- Módszer2 újra1 -- private void AutokAdatainakBetolteseAdatbazisbol()
         //private void AutokAdatainakBetolteseAdatbazisbol()
         //{
         //    //-- Connection objektum
@@ -167,7 +172,7 @@ namespace WF_Autok_Adatbazis
         //}
         #endregion //-- Módszer2 újra1
 
-        #region //-- Módszer2 újra2
+        #region //-- Módszer2 újra2 private void AutokAdatainakBetolteseAdatbazisbol()
         private void AutokAdatainakBetolteseAdatbazisbol()
         {
             //-- Connection objektum
@@ -198,7 +203,8 @@ namespace WF_Autok_Adatbazis
                             Auto auto = new Auto(mySqlDataReader.GetInt32("id"), mySqlDataReader.GetString("rendszam"), mySqlDataReader.GetString("gyartmany"), mySqlDataReader.GetString("tipus"));
                             this.listBox_Autok.Items.Add(auto);
                         }
-                    }
+                        mySqlDataReader.Close();
+                   }
                     catch (MySqlException ex)
                     {
 
@@ -216,59 +222,67 @@ namespace WF_Autok_Adatbazis
 
                 MessageBox.Show(ex.Message);
             }
-            mysqlConnection.Close();
+            //-- A mysqlConnection objektum csak az űrlap bezáródásakor fog bezárulni, lásd:
+            //-- private void Form_Autok_Nyito_FormClosing(object sender, FormClosingEventArgs e) metódus
+
         }
         #endregion //-- Módszer2 újra2
 
-        private void button_Close_Click(object sender, EventArgs e)
-        {
-            
-            string sqlInserIntoString = "INSERT INTO `autok`(`rendszam`, `gyartmany`, `tipus`) VALUES (@rendszam,@gyartmany,@tipus);";
-            mysqlCommand.CommandText = sqlInserIntoString;
-            mysqlConnection.Open();
-
-            //int ujAutoInListbox = 0; //Ennek értékét mindig eggyel növeljük, ha új - még rögzítetlen elemet találunk a listboxban) Lásd a foreach ciklusban.
-            foreach (Auto auto in listBox_Autok.Items)
-            {
-                if (auto.Id==0)
-                {
-                    mysqlCommand.Parameters.AddWithValue("@rendszam",(string) textBox_Rendszam.Text);
-                    mysqlCommand.Parameters.AddWithValue("@gyartmany",(string) textBox_Gyartmany.Text);
-                    mysqlCommand.Parameters.AddWithValue("@tipus",(string) textBox_Tipus.Text);
-                    mysqlCommand.ExecuteNonQuery();
-                }
-            }
-
-            //try
-            //{
-            //    //mysqlConnection.Open();
-            //    mysqlCommand.ExecuteNonQuery();
-            //}
-            //catch (MySqlException ex)
-            //{
-
-            //    MessageBox.Show(ex.Message);
-            //}
-            mysqlConnection.Close();
-            //this.Close();
-        }
-
-        //private void button_Insert_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    ToolTip toolTip = new ToolTip();
-        //    toolTip.ToolTipTitle = "Adatok rögzítése a listában.";
-        //    toolTip.AutoPopDelay = 15000;
-        //    toolTip.InitialDelay = 500;
-        //    toolTip.ReshowDelay = 500;
-        //    toolTip.IsBalloon = true;
-        //    toolTip.ShowAlways = true;
-        //    toolTip.SetToolTip(button_Insert,"Kattints a rögzítéshez!");
-        //    //toolTip = null;
-        //}
-
         private void button_Delete_Click(object sender, EventArgs e)
         {
-            listBox_Autok.Items.RemoveAt(listBox_Autok.SelectedIndex);
+            //-- Csak akkor tudunk törrölni a listából, ha van kijelölt elem
+            if (listBox_Autok.SelectedIndex > -1)
+            {
+                //-- Ha a kijelölt elem ID-je nem nulla, akkor az az elem már az adatbázisban van, tehát onnan kell törölni.
+                //-- Ellenkező esetben az elem még nincs benne az adatbázisban, tehát csak a listából kell törölni.
+                Auto auto = (Auto)listBox_Autok.SelectedItem;
+                if (auto.Id != 0)
+                {
+                    mysqlCommand.CommandText= "DELETE FROM `autok` WHERE id = @id";
+                    mysqlCommand.Parameters.AddWithValue("id",auto.Id);
+                    mysqlCommand.ExecuteNonQuery();
+                    MessageBox.Show("Egy rekord törlésre került az adatbázisból is és a listáról is");
+                    listBox_Autok.Items.RemoveAt(listBox_Autok.SelectedIndex);
+                    AutokAdatainakBetolteseAdatbazisbol();
+                }
+                else
+                {
+                    listBox_Autok.Items.RemoveAt(listBox_Autok.SelectedIndex);
+                    MessageBox.Show("Egy rekord törlésre került a listából, az adatbázis nem módosult.");
+               }
+            }
+            return;
+        }
+
+        private void button_Save_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mysqlCommand.CommandText = "INSERT INTO `autok`(`rendszam`, `gyartmany`, `tipus`) VALUES(@rendszam, @gyartmany, @tipus)";
+                //mysqlConnection.Open();  -- Nem kell megnyitni a kapcsolatot, mert míg a form nyitva van, addig a kapcsolat is fennáll
+                int rekordSzamlalo = 0;
+                foreach (Auto auto in listBox_Autok.Items)
+                {
+                    if (auto.Id == 0)
+                    {
+                        mysqlCommand.Parameters.AddWithValue("@rendszam", Convert.ToString(auto.Rendszam));
+                        mysqlCommand.Parameters.AddWithValue("@gyartmany", Convert.ToString(auto.Gyartmany));
+                        mysqlCommand.Parameters.AddWithValue("@tipus", Convert.ToString(auto.Tipus));
+                        rekordSzamlalo += mysqlCommand.ExecuteNonQuery();
+                    }
+                }
+                if (rekordSzamlalo > 0)
+                {
+                    MessageBox.Show($"{rekordSzamlalo} rekordot adtunk hozzá az adatbázishoz.");
+                }
+                //-- Ezután a listbox taratalmát töröljük és újra betöltjük az datbázisból, de már az új rekodokkal együtt:
+                listBox_Autok.Items.Clear();
+                AutokAdatainakBetolteseAdatbazisbol();
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button_Save_MouseHover(object sender, EventArgs e)
@@ -299,8 +313,39 @@ namespace WF_Autok_Adatbazis
 
         private void button_Insert_Click(object sender, EventArgs e)
         {
+            foreach (Control control in groupBox_Autok.Controls)
+            {
+                Console.WriteLine($"{control.GetType().ToString().ToLower()} {control.Name} {control.Text}");
+                if (control.GetType() == typeof(TextBox)) //control.GetType().ToString().ToLower()== "system.windows.forms.textbox"
+                {
+                    MessageBox.Show("Minden mezőt ki kell tölteni!");
+                    control.Focus();
+                    return;
+                }
+            }
             Auto auto = new Auto(0, textBox_Rendszam.Text, textBox_Gyartmany.Text, textBox_Tipus.Text);
             listBox_Autok.Items.Add(auto);
+            textBox_Rendszam.Text = "";
+            textBox_Gyartmany.Text = "";
+            textBox_Tipus.Text = "";
+        }
+
+        private void listBox_Autok_Click(object sender, EventArgs e)
+        {
+            if (listBox_Autok.SelectedIndex > -1)
+            {
+                button_Delete.Enabled = true;
+                button_Delete.TabStop = true;
+                button_Insert.Enabled = true;
+                button_Insert.TabStop = true;
+            }
+            else
+            {
+                button_Delete.Enabled = false;
+                button_Delete.TabStop = false;
+                button_Insert.Enabled = false;
+                button_Insert.TabStop = false;
+            }
         }
     }
 }
