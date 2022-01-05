@@ -334,6 +334,41 @@ namespace WF_Autok_Adatbazis
         {
             if (listBox_Autok.SelectedIndex > -1)
             {
+                foreach (Control control in groupBox_Autok.Controls)
+                {
+                    if (control.GetType() == typeof(TextBox))
+                    {
+                        if (!String.IsNullOrEmpty(control.Text)) //Mielőtt a textboxokat kitöltenénk a listBoxból kiválasztott elemmmel, ellenőrizzük, hogy van-e nem mentett adat a textBoxokban
+                        {
+                            //-- Ha van mentetlen adat a textBoxokban, akkor figyelmeztetjük a felhasználót, hogy mentsen, ellenkező esetben az adatok törlésre kerülnek.
+                            string _message = "A kitölthető mező(k)ben van(nak) nem mentett adat(ok). Ha folytatod, akkor a kitöltött adat(ok) elvesznek.\nA 'Mégse' gombra kattintva visszatérhetsz a kitöltéshez és elmentheted a még nem mentett adat(oka)t.";
+                            if (MessageBox.Show(_message,"Lehetséges adatvesztés!",MessageBoxButtons.OKCancel,MessageBoxIcon.Warning) == DialogResult.OK)
+                            {
+                                Auto auto = (Auto)listBox_Autok.SelectedItem;
+                                textBox_Kod.Text = Convert.ToString(auto.Id);
+                                textBox_Rendszam.Text = auto.Rendszam;
+                                textBox_Gyartmany.Text = auto.Gyartmany;
+                                textBox_Tipus.Text = auto.Tipus;
+                                textBox_Rendszam.Focus();
+                                if (auto.Id != 0)
+                                {
+                                    button_Update.Text = "Adatbázisban módosít";
+                                }
+                                else
+                                {
+                                    button_Update.Text = "Listaelemet módosít";
+                                }
+
+                                return;
+                            }
+                            else
+                            {
+                                control.Select();
+                                return;
+                            }
+                        }
+                    }
+                }
                 button_Delete.Enabled = true;
                 button_Delete.TabStop = true;
                 button_Insert.Enabled = true;
